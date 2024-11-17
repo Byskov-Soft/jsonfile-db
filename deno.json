@@ -1,6 +1,6 @@
 {
   "name": "@bysk/jsonfile-db",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "license": "MIT",
   "nodeModulesDir": "none",
   "tasks": {
@@ -33,6 +33,7 @@
     "include": [
       "src/**/*.ts",
       "deno.json",
+      "LICENSE",
       "LICENSE-locally-db",
       "mod.ts",
       "README.md"
