@@ -2,7 +2,7 @@
 
 JSON file database for Deno implemented in Typescript.
 
-The code is based on [locallydb](https://github.com/btwael/locallydb). See original license: [LICENSE-locally-db](./LICENSE-locally-db).
+The code is based on [locallydb](https://github.com/btwael/locallydb). See original license: [LICENSE-locally-db](https://github.com/Byskov-Soft/jsonfile-db/blob/main/LICENSE-locally-db).
 
 The purpose of the library is to provide a simple drop-in document (no-sql) database that can be used for low volume storage.
 
