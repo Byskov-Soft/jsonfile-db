@@ -1,125 +1,121 @@
-import { Database } from "./database.ts";
-import { Document } from "./document.ts";
-import { throwError } from "./errorManager.ts";
-import { CollectionMeta, DocumentData, DocumentDataAny } from "./types.ts";
-import { now } from "./utils.ts";
+import type { Database } from './database.ts'
+import { Document } from './document.ts'
+import { throwError } from './errorManager.ts'
+import type { CollectionMeta, DocumentData, DocumentDataAny } from './types.ts'
+import { now } from './utils.ts'
 
 export interface AttributeCriteria {
-  name: string;
-  value: string;
+  name: string
+  value: string
 }
 
 export class Collection {
-  private documents: Document[];
-  private database: Database;
-  private _name: string;
-  private _created: string;
-  private _updated: string;
-  private _autoId: number;
+  private documents: Document[]
+  private database: Database
+  private _name: string
+  private _created: string
+  private _updated: string
+  private _autoId: number
 
   constructor(name: string, database: Database) {
-    this.database = database;
-    this._name = name;
-    this._created = now().toISOString();
-    this._updated = now().toISOString();
-    this._autoId = 0;
-    this.documents = [];
+    this.database = database
+    this._name = name
+    this._created = now().toISOString()
+    this._updated = now().toISOString()
+    this._autoId = 0
+    this.documents = []
   }
 
   public getName(): string {
-    return this._name;
+    return this._name
   }
 
   public setName(name: string): void {
-    this._name = name;
+    this._name = name
   }
 
   public createDocument(obj: DocumentDataAny = {}): Document {
     const document = new Document({
       ...obj,
       ...(obj._id ? {} : { _id: this._autoId++ }),
-    });
+    })
 
-    this.documents.push(document);
-    this.update();
-    return document;
+    this.documents.push(document)
+    this.update()
+    return document
   }
 
   public importDocument(obj: DocumentData): Document {
-    const document = new Document(obj);
-    this.documents.push(document);
-    this.update();
-    return document;
+    const document = new Document(obj)
+    this.documents.push(document)
+    this.update()
+    return document
   }
 
   public getById(id: number | string): Document {
-    const document = this.documents.find((doc) =>
-      doc.getProperty("_id") === id
-    );
+    const document = this.documents.find((doc) => doc.getProperty('_id') === id)
 
     if (!document) {
-      return throwError(301, id);
+      return throwError(301, id)
     }
 
-    return document;
+    return document
   }
 
   public getByAttribute(criteria: AttributeCriteria[]): Document[] {
     if (criteria.length === 0) {
-      return this.documents;
+      return this.documents
     }
 
     return this.documents.filter((doc) => {
       return criteria.every((criterion) =>
         doc.hasProperty(criterion.name) &&
         doc.getProperty(criterion.name) === criterion.value
-      );
-    });
+      )
+    })
   }
 
   public removeById(id: number | string): boolean {
-    const index = this.documents.findIndex((doc) =>
-      doc.getProperty("_id") === id
-    );
+    const index = this.documents.findIndex((doc) => doc.getProperty('_id') === id)
 
     if (index === -1) {
-      return false;
+      return false
     }
 
-    this.documents.splice(index, 1);
-    this.update();
-    return true;
+    this.documents.splice(index, 1)
+    this.update()
+    return true
   }
 
   public removeByAttribute(criteria: AttributeCriteria[]): boolean {
-    const initialLength = this.documents.length;
+    const initialLength = this.documents.length
 
     if (criteria.length === 0) {
-      return false;
+      return false
     }
 
     this.documents = this.documents.filter((doc) => {
       return !criteria.every((criterion) =>
         doc.hasProperty(criterion.name) &&
         doc.getProperty(criterion.name) === criterion.value
-      );
-    });
+      )
+    })
 
     if (this.documents.length === initialLength) {
-      return false;
+      return false
     }
 
-    this.update();
-    return true;
+    this.update()
+    return true
   }
 
   private update(time: Date | null = null): void {
     if (time === null) {
-      time = now();
+      time = now()
     }
 
-    this._updated = time.toISOString();
-    this.database.update(time);
+    this._updated = time.toISOString()
+    this.database.update(time)
   }
 
   public getCollectionMeta(): CollectionMeta {
@@ -128,6 +124,6 @@ export class Collection {
       created: this._created,
       updated: this._updated,
       autoId: this._autoId,
-    };
+    }
   }
 }

@@ -4,7 +4,19 @@
   "license": "MIT",
   "nodeModulesDir": "none",
   "tasks": {
-    "test": "deno test --allow-read --allow-write test/"
+    "test": "deno test --allow-read --allow-write test/",
+    "publish": "npx jsr publish --allow-slow-types"
+  },
+  "lint": {
+    "rules": {
+      "exclude": ["no-slow-types"]
+    }
+  },
+  "fmt": {
+    "singleQuote": true,
+    "indentWidth": 2,
+    "lineWidth": 100,
+    "semiColons": false
   },
   "exports": {
     ".": "./mod.ts"
@@ -14,8 +26,7 @@
     "@std/expect": "jsr:@std/expect",
     "@std/fs": "jsr:@std/fs",
     "date-fns": "npm:date-fns@3.0.6",
-    "uuid": "npm:uuid@9.0.0",
-    "zod": "https://deno.land/x/zod@v3.23.8/mod.ts"
+    "uuid": "npm:uuid@9.0.0"
   },
   "publish": {
     "include": [
