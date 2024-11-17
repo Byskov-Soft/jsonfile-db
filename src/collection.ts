@@ -1,15 +1,8 @@
 import { Database } from "./database.ts";
 import { Document } from "./document.ts";
 import { throwError } from "./errorManager.ts";
-import { JSONObject } from "./json.ts";
+import { CollectionMeta, DocumentData, DocumentDataAny } from "./types.ts";
 import { now } from "./utils.ts";
-
-interface CollectionMeta {
-  name: string;
-  _created: string;
-  _updated: string;
-  _autoId: number;
-}
 
 export interface AttributeCriteria {
   name: string;
@@ -17,34 +10,45 @@ export interface AttributeCriteria {
 }
 
 export class Collection {
-  private meta: CollectionMeta;
   private documents: Document[];
   private database: Database;
+  private _name: string;
+  private _created: string;
+  private _updated: string;
+  private _autoId: number;
 
   constructor(name: string, database: Database) {
     this.database = database;
-    this.meta = {
-      name,
-      _created: now().toISOString(),
-      _updated: now().toISOString(),
-      _autoId: 0,
-    };
+    this._name = name;
+    this._created = now().toISOString();
+    this._updated = now().toISOString();
+    this._autoId = 0;
     this.documents = [];
   }
 
   public getName(): string {
-    return this.meta.name;
+    return this._name;
   }
 
   public setName(name: string): void {
-    this.meta.name = name;
+    this._name = name;
   }
 
-  public createDocument(obj: JSONObject = {}, isImport = false): Document {
-    obj["_id"] = obj._id || this.meta._autoId++;
-    const document = new Document(obj, isImport);
-    this.update();
+  public createDocument(obj: DocumentDataAny = {}): Document {
+    const document = new Document({
+      ...obj,
+      ...(obj._id ? {} : { _id: this._autoId++ }),
+    });
+
     this.documents.push(document);
+    this.update();
+    return document;
+  }
+
+  public importDocument(obj: DocumentData): Document {
+    const document = new Document(obj);
+    this.documents.push(document);
+    this.update();
     return document;
   }
 
@@ -54,7 +58,7 @@ export class Collection {
     );
 
     if (!document) {
-      throwError(301, id);
+      return throwError(301, id);
     }
 
     return document;
@@ -114,11 +118,16 @@ export class Collection {
       time = now();
     }
 
-    this.meta._updated = time.toISOString();
+    this._updated = time.toISOString();
     this.database.update(time);
   }
 
-  public getUpdateTime(): string {
-    return this.meta._updated;
+  public getCollectionMeta(): CollectionMeta {
+    return {
+      name: this._name,
+      created: this._created,
+      updated: this._updated,
+      autoId: this._autoId,
+    };
   }
 }

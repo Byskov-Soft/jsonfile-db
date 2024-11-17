@@ -1,6 +1,6 @@
 import { assert, assertEquals } from "@std/assert";
-import { Collection } from "../../collection.ts";
-import { Database } from "../../database.ts";
+import { Collection } from "../../src/collection.ts";
+import { Database } from "../../src/database.ts";
 
 // CONSTRUCTOR;
 Deno.test("Collection - getName returns collection name", () => {

@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "@std/assert";
-import { Document } from "../document.ts";
+import { Document } from "../src/document.ts";
 
 Deno.test("Document - Constructor generates _id if not provided", () => {
     const doc = new Document({});
@@ -16,14 +16,6 @@ Deno.test("Document - Constructor with regular properties", () => {
     const doc = new Document({ name: "test", age: 25 });
     assertEquals(doc.getProperty("name"), "test");
     assertEquals(doc.getProperty("age"), 25);
-});
-
-Deno.test("Document - Constructor validates reserved keys", () => {
-    assertThrows(
-        () => new Document({ _rev: "1", name: "test" }),
-        Error,
-        "Error 201",
-    );
 });
 
 Deno.test("Document - hasProperty", () => {
@@ -43,7 +35,7 @@ Deno.test("Document - getProperty throws on nonexistent key", () => {
     assertThrows(
         () => doc.getProperty("nonexistent"),
         Error,
-        "Error 204",
+        "Error 202",
     );
 });
 
@@ -56,23 +48,19 @@ Deno.test("Document - setProperty normal property", () => {
 Deno.test("Document - setProperty throws on reserved key", () => {
     const doc = new Document({});
     assertThrows(
-        () => doc.setProperty("_rev", "1"),
+        () => doc.setProperty("_id", new Date().toISOString()),
         Error,
         "Error 201",
     );
     assertThrows(
-        () => doc.setProperty("_key", "test"),
+        () => doc.setProperty("_created", new Date().toISOString()),
         Error,
         "Error 201",
     );
-});
-
-Deno.test("Document - setProperty throws on immutable key", () => {
-    const doc = new Document({});
     assertThrows(
-        () => doc.setProperty("_id", "test-id"),
+        () => doc.setProperty("_updated", new Date().toISOString()),
         Error,
-        "Error 203",
+        "Error 201",
     );
 });
 

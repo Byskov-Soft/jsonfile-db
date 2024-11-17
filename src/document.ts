@@ -1,44 +1,24 @@
 import { throwError } from "./errorManager.ts";
 import { JSONObject, JSONValue } from "./json.ts";
+import { DocumentData, DocumentDataAny } from "./types.ts";
 import { generateUUID } from "./utils.ts";
 
-enum KEY_TYPE {
-  RESERVED = "RESERVED",
-  IMMUTABLE = "IMMUTABLE",
-}
-
-const properties = {
-  // _rev and _key are currently not used
-  reserved: ["_rev", "_key", "_created", "_updated"],
-  immutable: ["_id"],
-};
-
-const validateKey = (key: string, type: KEY_TYPE): void => {
-  if (type === KEY_TYPE.RESERVED) {
-    if (properties.reserved.indexOf(key) >= 0) {
-      throwError(201, key);
-    }
-  } else if (properties.immutable.indexOf(key) >= 0) {
-    throwError(203, key);
-  }
-};
+const reservedkeys = ["_id", "_created", "_updated"];
 
 export class Document {
-  private data: JSONObject = {};
+  private data: DocumentData;
 
-  constructor(obj: JSONObject, isImport = false) {
-    if (obj["_id"] === undefined) {
-      obj["_id"] = generateUUID();
-    }
+  constructor(obj: DocumentData | DocumentDataAny) {
+    this.data = {
+      _id: obj._id || generateUUID(),
+      _created: obj._created || new Date().toISOString(),
+      _updated: obj._updated || new Date().toISOString(),
+    };
 
     for (const key in obj) {
       const value = obj[key];
-      if (!isImport) validateKey(key, KEY_TYPE.RESERVED);
       this.data[key] = value;
     }
-
-    this.data["_created"] = new Date().toISOString();
-    this.data["_updated"] = new Date().toISOString();
   }
 
   public hasProperty(key: string): boolean {
@@ -50,7 +30,7 @@ export class Document {
       return this.data[key] as T;
     }
 
-    throwError(204, key);
+    return throwError(202, key);
   }
 
   public object(): JSONObject {
@@ -58,9 +38,11 @@ export class Document {
   }
 
   public setProperty(key: string, value: JSONValue): void {
-    validateKey(key, KEY_TYPE.RESERVED);
-    validateKey(key, KEY_TYPE.IMMUTABLE);
+    if (reservedkeys.indexOf(key) >= 0) {
+      throwError(201, key);
+    }
+
     this.data[key] = value;
-    this.data["_updated"] = new Date().toISOString();
+    this.data._updated = new Date().toISOString();
   }
 }

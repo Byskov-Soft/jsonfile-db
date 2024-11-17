@@ -1,6 +1,6 @@
-import { assertEquals } from "@std/assert";
-import { AttributeCriteria, Collection } from "../../collection.ts";
-import { Database } from "../../database.ts";
+import { assertEquals, assertThrows } from "@std/assert";
+import { AttributeCriteria, Collection } from "../../src/collection.ts";
+import { Database } from "../../src/database.ts";
 
 // REMOVE BY ID
 Deno.test("Collection - removeById removes existing document", () => {
@@ -20,8 +20,11 @@ Deno.test("Collection - removeById removes existing document", () => {
     assertEquals(result, true);
 
     // Verify the document has been removed
-    const removedDoc = collection.getById(id);
-    assertEquals(removedDoc, null);
+    assertThrows(
+        () => collection.getById(id),
+        Error,
+        "Error 301",
+    );
 });
 
 Deno.test("Collection - removeById returns false for non-existent ID", () => {
@@ -42,7 +45,7 @@ Deno.test("Collection - removeById updates collection metadata", async () => {
     const id = doc.getProperty<string | number>("_id");
 
     // Store the previous update time
-    const previousUpdateTime = collection.getUpdateTime();
+    const previousUpdateTime = collection.getCollectionMeta().updated;
 
     // Wait for 100ms to make sure time has progressed
     await new Promise((resolve) => setTimeout(resolve, 100));
@@ -51,7 +54,7 @@ Deno.test("Collection - removeById updates collection metadata", async () => {
     collection.removeById(id);
 
     // Verify that the update time has changed
-    const newUpdateTime = collection.getUpdateTime();
+    const newUpdateTime = collection.getCollectionMeta().updated;
     assertEquals(newUpdateTime > previousUpdateTime, true);
 });
 
@@ -147,7 +150,7 @@ Deno.test("Collection - removeByAttribute updates collection metadata", async ()
     collection.createDocument({ name: "Doc2", type: "A" });
 
     // Store the previous update time
-    const previousUpdateTime = collection.getUpdateTime();
+    const previousUpdateTime = collection.getCollectionMeta().updated;
 
     // Wait for 100ms to make sure time has progressed
     await new Promise((resolve) => setTimeout(resolve, 100));
@@ -157,6 +160,6 @@ Deno.test("Collection - removeByAttribute updates collection metadata", async ()
     collection.removeByAttribute(criteria);
 
     // Verify that the update time has changed
-    const newUpdateTime = collection.getUpdateTime();
+    const newUpdateTime = collection.getCollectionMeta().updated;
     assertEquals(newUpdateTime > previousUpdateTime, true);
 });

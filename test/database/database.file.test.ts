@@ -2,8 +2,8 @@
 import { assert, assertEquals } from "@std/assert";
 import { expect } from "@std/expect";
 import { existsSync } from "@std/fs";
-import { Database } from "../../database.ts";
-import { JSONArray, JSONObject } from "../../json.ts";
+import { Database } from "../../src/database.ts";
+import { JSONArray, JSONObject } from "../../src/json.ts";
 
 Deno.test("Database - saveToFile saves collections and documents to a JSON file", async () => {
     const db = new Database();
@@ -25,7 +25,7 @@ Deno.test("Database - saveToFile saves collections and documents to a JSON file"
     }
 
     // Call saveToFile
-    await db.saveToFile(filePath);
+    await db.persist(filePath);
 
     // Verify the file was created
     assert(
@@ -94,11 +94,11 @@ Deno.test("Database - loadFromFile reads collections and documents from a JSON f
     }
 
     // Call saveToFile
-    await db1.saveToFile(filePath);
+    await db1.persist(filePath);
 
     // Load the file into a new database
     const db2 = new Database();
-    await db2.loadFromFile(filePath);
+    await db2.restore(filePath);
 
     // Verify the collections and documents in db2
     assertEquals(db2.getCollectionNames(), ["collection1", "collection2"]);

@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "@std/assert";
-import { throwError } from "../errorManager.ts";
+import { throwError } from "../src/errorManager.ts";
 
 Deno.test("throwError - throws collection creation error (101)", () => {
     const error = assertThrows(
@@ -12,14 +12,14 @@ Deno.test("throwError - throws collection creation error (101)", () => {
     );
 });
 
-Deno.test("throwError - throws collection not found error (104)", () => {
+Deno.test("throwError - throws collection not found error (103)", () => {
     const error = assertThrows(
-        () => throwError(104, "test"),
+        () => throwError(103, "test"),
         Error,
     );
     assertEquals(
         error.message,
-        "Error 104: Collection with name `test` not found.",
+        "Error 103: Collection with name `test` not found.",
     );
 });
 

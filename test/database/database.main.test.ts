@@ -1,18 +1,18 @@
 // deno-lint-ignore-file no-explicit-any
 import { assertEquals, assertThrows } from "@std/assert";
-import { Database } from "../../database.ts";
+import { Database } from "../../src/database.ts";
 
 // CONSTRUCTOR
 Deno.test("Database - constructor initializes properties", () => {
     const db = new Database();
-    // Accessing private properties via type assertion for testing
-    const meta = (db as any).meta;
+    const meta = db.getDBMeta();
+    // Accessing private collections via type assertion for testing
     const collections = (db as any).collections;
 
     assertEquals(Array.isArray(collections), true);
     assertEquals(collections.length, 0);
-    assertEquals(typeof meta._created === "string", true);
-    assertEquals(typeof meta._updated === "string", true);
+    assertEquals(typeof meta.created === "string", true);
+    assertEquals(typeof meta.updated === "string", true);
 });
 
 // CREATE COLLECTION
@@ -40,12 +40,12 @@ Deno.test("Database - createCollection throws error if collection exists", () =>
 
 Deno.test("Database - createCollection updates database metadata", async () => {
     const db = new Database();
-    const prevUpdated = (db as any).meta._updated;
+    const prevUpdated = db.getDBMeta().updated;
 
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     db.createCollection("testCollection");
-    const newUpdated = (db as any).meta._updated;
+    const newUpdated = db.getDBMeta().updated;
     assertEquals(newUpdated > prevUpdated, true);
 });
 
@@ -153,7 +153,7 @@ Deno.test("Database - removeCollection updates metadata", async () => {
     db.createCollection("testCollection");
 
     // Store previous update time
-    const prevUpdated = (db as any).meta._updated;
+    const prevUpdated = db.getDBMeta().updated;
 
     await new Promise((resolve) => setTimeout(resolve, 100));
 
@@ -161,7 +161,7 @@ Deno.test("Database - removeCollection updates metadata", async () => {
     db.removeCollection("testCollection");
 
     // Access updated time
-    const newUpdated = (db as any).meta._updated;
+    const newUpdated = db.getDBMeta().updated;
 
     // Verify that the updated time has changed
     assertEquals(newUpdated > prevUpdated, true);

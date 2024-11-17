@@ -1,6 +1,6 @@
-import { assert, assertEquals } from "@std/assert";
-import { Collection } from "../../collection.ts";
-import { Database } from "../../database.ts";
+import { assert, assertEquals, assertThrows } from "@std/assert";
+import { Collection } from "../../src/collection.ts";
+import { Database } from "../../src/database.ts";
 
 // GET BY ID
 Deno.test("Collection - getById returns document when found", () => {
@@ -14,13 +14,16 @@ Deno.test("Collection - getById returns document when found", () => {
     assertEquals(foundDoc?.getProperty("_id"), 0);
 });
 
-Deno.test("Collection - getById returns null when not found", () => {
+Deno.test("Collection - getById throws error when not found", () => {
     const db = new Database();
     const collection = new Collection("test", db);
     collection.createDocument({ name: "test" });
-    const foundDoc = collection.getById(999);
 
-    assertEquals(foundDoc, null);
+    assertThrows(
+        () => collection.getById(999),
+        Error,
+        "Error 301",
+    );
 });
 
 Deno.test("Collection - getById finds correct document among many", () => {
