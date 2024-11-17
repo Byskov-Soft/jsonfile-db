@@ -1,0 +1,16 @@
+{
+  "tasks": {
+    "dev": "deno run --watch src/main.ts",
+    "test": "deno test --allow-read --allow-write"
+  },
+  "exports": {
+    "./": "./mod.ts"
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert",
+    "@std/expect": "jsr:@std/expect",
+    "@std/fs": "jsr:@std/fs",
+    "rambda": "npm:rambda@9.3.0",
+    "uuid": "npm:uuid@9.0.0"
+  }
+}
