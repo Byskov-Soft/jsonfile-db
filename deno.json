@@ -7,7 +7,7 @@
     "test": "deno test --allow-read --allow-write test/"
   },
   "exports": {
-    "./": "./mod.ts"
+    ".": "./mod.ts"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert",
