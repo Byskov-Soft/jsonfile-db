@@ -8,6 +8,27 @@ The purpose of the library is to provide a simple drop-in document (no-sql) data
 
 If you need advanced features such as user management, authentication, transactions, failure recovery, etc. this database is not the one to pick.
 
+## Installation options
+
+- Add it to your "imports" in `deno.json`:
+
+  ```json
+  {
+    "imports": {
+      "jsonfile-db": "jsr:@bysk/jsonfile-db"
+    }
+  }
+  ```
+
+  Use it in your code: `import * as jsonfile_db from "jsonfile-db";`
+
+
+- Import it directly in your code:
+
+  `import * as jsonfile_db from "jsr:@bysk/jsonfile-db";`
+
+- Read documentation from the [JSR registry](https://jsr.io/@bysk/jsonfile-db@0.1.1) if you need more help.
+
 ## Features and Limitations
 
 - You can create as many databases as you want
