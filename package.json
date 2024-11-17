@@ -1,0 +1,7 @@
+{
+    "name":"@bysk/jsonfile-db",
+    "version": "0.1.0",
+    "dependencies": {
+      "zod": "^3.23.8"
+    }
+  }

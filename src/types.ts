@@ -1,5 +1,5 @@
 import { parseISO } from 'date-fns'
-import { z } from 'https://deno.land/x/zod@v3.23.8/mod.ts'
+import { z } from 'zod'
 
 // Schema for an ISO8601 date string
 export const ISO8601DateString = z.string().refine(

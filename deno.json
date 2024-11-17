@@ -33,7 +33,7 @@
       "src/**/*.ts",
       "deno.json",
       "LICENSE",
-      "mod.js",
+      "mod.ts",
       "README.md"
     ],
     "exclude": [
