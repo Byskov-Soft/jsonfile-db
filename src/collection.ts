@@ -72,22 +72,23 @@ export class Collection {
       return criteria.every((criterion) => {
         if (!doc.hasProperty(criterion.name)) return false
         const value = `${doc.getProperty(criterion.name)}`
+        const criterionValue = `${criterion.value}`
 
         if (!criterion.opt) {
-          return value === criterion.value
+          return value === criterionValue
         }
 
         if (typeof value === 'string') {
           if (criterion.opt === 'beginsWith') {
-            return value.startsWith(`${criterion.value}`)
+            return value.startsWith(criterionValue)
           }
 
           if (criterion.opt === 'endsWith') {
-            return value.endsWith(`${criterion.value}`)
+            return value.endsWith(criterionValue)
           }
 
           if (criterion.opt === 'contains') {
-            return value.includes(`${criterion.value}`)
+            return value.includes(criterionValue)
           }
         }
       })
