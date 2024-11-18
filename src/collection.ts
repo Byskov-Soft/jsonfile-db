@@ -6,7 +6,7 @@ import { now } from './utils.ts'
 
 export interface AttributeCriteria {
   name: string
-  value: string
+  value: unknown
   opt?: 'beginsWith' | 'endsWith' | 'contains'
 }
 
@@ -71,7 +71,7 @@ export class Collection {
     return this.documents.filter((doc) => {
       return criteria.every((criterion) => {
         if (!doc.hasProperty(criterion.name)) return false
-        const value = doc.getProperty(criterion.name)
+        const value = `${doc.getProperty(criterion.name)}`
 
         if (!criterion.opt) {
           return value === criterion.value
@@ -79,15 +79,15 @@ export class Collection {
 
         if (typeof value === 'string') {
           if (criterion.opt === 'beginsWith') {
-            return value.startsWith(criterion.value)
+            return value.startsWith(`${criterion.value}`)
           }
 
           if (criterion.opt === 'endsWith') {
-            return value.endsWith(criterion.value)
+            return value.endsWith(`${criterion.value}`)
           }
 
           if (criterion.opt === 'contains') {
-            return value.includes(criterion.value)
+            return value.includes(`${criterion.value}`)
           }
         }
       })
