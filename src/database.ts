@@ -93,6 +93,26 @@ export class Database {
     )
 
     const jsonData = JSON.stringify(fileData, null, 2)
+
+    try {
+      const fileInfo = await Deno.stat(filePath)
+
+      if (fileInfo.isDirectory) {
+        console.error(`The path "${filePath}" provided is a directory. Please provide a file path.`)
+      }
+
+      if (fileInfo.isFile) {
+        console.log(`Recreating database file: ${filePath}`)
+        await Deno.remove(filePath)
+      }
+    } catch (error) {
+      if (error instanceof Deno.errors.NotFound) {
+        // Do nothing, the file does not exist
+      } else {
+        console.error((error as Error).message)
+      }
+    }
+
     await Deno.writeTextFile(filePath, jsonData)
   }
 
