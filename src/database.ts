@@ -102,7 +102,6 @@ export class Database {
       }
 
       if (fileInfo.isFile) {
-        console.log(`Recreating database file: ${filePath}`)
         await Deno.remove(filePath)
       }
     } catch (error) {
