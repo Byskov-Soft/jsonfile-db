@@ -53,16 +53,25 @@ export class Database {
     return this.collections.some((collection) => collection.getName() === name)
   }
 
-  public removeCollection(name: string): boolean {
+  public removeCollection(name: string, ignoreIfNotExists = false): boolean {
     const index = this.collections.findIndex((c) => c.getName() === name)
 
     if (index === -1) {
+      if (ignoreIfNotExists) {
+        return false
+      }
+
       throwError(102, name)
     }
 
     this.update()
     this.collections.splice(index, 1)
     return true
+  }
+
+  public addOrReplaceCollection(name: string, collection: Collection): void {
+    this.removeCollection(name, true)
+    this.addCollection(collection)
   }
 
   public getCollectionNames(): string[] {

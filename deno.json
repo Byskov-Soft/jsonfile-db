@@ -1,6 +1,6 @@
 {
   "name": "@bysk/jsonfile-db",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "license": "MIT",
   "nodeModulesDir": "none",
   "tasks": {
