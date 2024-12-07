@@ -45,7 +45,7 @@ Don't rely on this database solution for data you cannot afford to loose. Since 
 
 # API Documentation
 
-See the generated [JSDoc](./docs/index.html)
+See the generated [JSDoc](https://jsr.io/@bysk/jsonfile-db@latest/doc)
 
 # Usage
 
