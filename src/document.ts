@@ -10,14 +10,10 @@ export class Document {
 
   constructor(obj: DocumentData | DocumentDataAny) {
     this.data = {
-      _id: obj._id || generateUUID(),
+      ...obj,
+      _id: obj._id ?? generateUUID(),
       _created: obj._created || new Date().toISOString(),
       _updated: obj._updated || new Date().toISOString(),
-    }
-
-    for (const key in obj) {
-      const value = obj[key]
-      this.data[key] = value
     }
   }
 

@@ -12,13 +12,13 @@ export interface AttributeCriteria {
 
 export class Collection {
   private documents: Document[]
-  private database: Database
+  private database: Database | undefined
   private _name: string
   private _created: string
   private _updated: string
   private _autoId: number
 
-  constructor(name: string, database: Database) {
+  constructor(name: string, database?: Database) {
     this.database = database
     this._name = name
     this._created = now().toISOString()
@@ -46,11 +46,16 @@ export class Collection {
     return document
   }
 
-  public importDocument(obj: DocumentData): Document {
+  public importDocument(obj: DocumentData | DocumentDataAny): Document {
     const document = new Document(obj)
     this.documents.push(document)
     this.update()
     return document
+  }
+
+  public addDocument(document: Document): void {
+    this.documents.push(document)
+    this.update()
   }
 
   public getById(id: number | string): Document {
@@ -135,7 +140,10 @@ export class Collection {
     }
 
     this._updated = time.toISOString()
-    this.database.update(time)
+
+    if (this.database) {
+      this.database.update(time)
+    }
   }
 
   public getCollectionMeta(): CollectionMeta {
