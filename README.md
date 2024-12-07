@@ -37,7 +37,7 @@ If you need advanced features such as user management, authentication, transacti
 - Rudimentary querying and deletion is available
   - By id
   - By one or more attributes
-- Databases, collections and documents are mutable, meaning that if a document is added to a collection, and the collection is added to a database all will be saved when the database is persisted.
+- Databases, collections and documents are mutable, meaning that if a document is added to a collection, and the collection is added to a database all changes to these objects will be saved when the database is persisted.
 
 ## Warning
 
