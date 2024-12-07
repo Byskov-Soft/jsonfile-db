@@ -20,12 +20,12 @@ If you need advanced features such as user management, authentication, transacti
   }
   ```
 
-  Use it in your code: `import * as jsonfile_db from "jsonfile-db";`
+  Use it in your code: `import { Database } from "jsonfile-db";`
 
 
 - Import it directly in your code:
 
-  `import * as jsonfile_db from "jsr:@bysk/jsonfile-db";`
+  `import { Database } from "jsr:@bysk/jsonfile-db";`
 
 - Read documentation from the [JSR registry](https://jsr.io/@bysk/jsonfile-db@0.1.1) if you need more help.
 
@@ -43,9 +43,9 @@ If you need advanced features such as user management, authentication, transacti
 
 Don't rely on this database solution for data you cannot afford to loose. Since persistence is based on writing and reading from files and no special error mitigation is implemented, app crashes and operating system issues could potentially result in a loss of data.
 
-# API
+# API Documentation
 
-See the generated (JSDoc)[./docs/index.html]
+See the generated [JSDoc](./docs/index.html)
 
 # Usage
 
