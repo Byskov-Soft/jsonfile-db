@@ -1,11 +1,32 @@
 import { Collection } from './collection.ts'
+import type { DocumentData } from './document.ts'
 import { throwError } from './errorManager.ts'
-import { type DatabaseMeta, DBJson, type DocumentData } from './types.ts'
+import { DBJson } from './parsers.ts'
 import { now } from './utils.ts'
 
+/**
+ * @interface DatabaseMeta
+ */
+export interface DatabaseMeta {
+  /** An ISO8601 date string */
+  created: string
+  /** An ISO8601 date string */
+  updated: string
+}
+
+/**
+ * The Database class is the main class of the library.
+ * It is used to create and manage collections but also persisting
+ * and restoring the database.
+ *
+ * @class Database
+ */
 export class Database {
+  /** @ignore */
   private _created: string
+  /** @ignore */
   private _updated: string
+  /** @ignore */
   private collections: Collection[]
 
   constructor() {
@@ -14,11 +35,22 @@ export class Database {
     this.collections = []
   }
 
-  // COLLECTIONS
+  /**
+   * Get a collection by its name. If the collection does not exist, it will be created.
+   *
+   * @param {string} name
+   * @returns {Collection}
+   */
   public collection(name: string): Collection {
     return this.hasCollection(name) ? this.getCollection(name) : this.createCollection(name)
   }
 
+  /**
+   * Creates a new collection in the database.
+   * @param {string} name
+   * @returns
+   * @throws {Error} 101 - Collection already exists
+   */
   public createCollection(name: string): Collection {
     if (this.hasCollection(name)) {
       throwError(101, name)
@@ -30,6 +62,11 @@ export class Database {
     return collection
   }
 
+  /**
+   * Add a collection to the database.
+   * @param {Collection} collection
+   * @throws {Error} 101 - Collection already exists
+   */
   public addCollection(collection: Collection): void {
     if (this.hasCollection(collection.getName())) {
       throwError(101, collection.getName())
@@ -39,20 +76,38 @@ export class Database {
     this.collections.push(collection)
   }
 
+  /**
+   * Get a collection existing in the database.
+   * @param {string} name
+   * @returns {Collection}
+   * @throws {Error} 102 - Collection does not exist
+   */
   public getCollection(name: string): Collection {
     const collection = this.collections.find((c) => c.getName() === name)
 
     if (!collection) {
-      return throwError(103, name)
+      return throwError(102, name)
     }
 
     return collection
   }
 
+  /**
+   * Check if a collection exists in the database.
+   * @param {string} name
+   * @returns {boolean}
+   */
   public hasCollection(name: string): boolean {
     return this.collections.some((collection) => collection.getName() === name)
   }
 
+  /**
+   * Removes a collection from the database.
+   * @param {string} name
+   * @param {boolean} ignoreIfNotExists
+   * @returns {boolean}
+   * @throws {Error} 102 - Collection does not exist
+   */
   public removeCollection(name: string, ignoreIfNotExists = false): boolean {
     const index = this.collections.findIndex((c) => c.getName() === name)
 
@@ -69,25 +124,47 @@ export class Database {
     return true
   }
 
+  /**
+   * Add or replace a collection in the database.
+   * If a collection with the same name already exists, it will be replaced.
+   * @param {string} name
+   * @param {Collection} collection
+   */
   public addOrReplaceCollection(name: string, collection: Collection): void {
     this.removeCollection(name, true)
     this.addCollection(collection)
   }
 
+  /**
+   * Get the names of all collections in the database.
+   * @returns {string[]}
+   */
   public getCollectionNames(): string[] {
     return this.collections.map((collection) => collection.getName())
   }
 
-  // META
+  /**
+   * Update the '_update' property of the database.
+   * @param time
+   */
   public update(time: Date | null = null): void {
     this._updated = time?.toISOString() || now().toISOString()
   }
 
+  /**
+   * Get the meta data of the database.
+   * This includes the created and updated dates.
+   * @returns {DatabaseMeta}
+   */
   public getDBMeta(): DatabaseMeta {
     return { created: this._created, updated: this._updated }
   }
 
-  // PERSISTENCE
+  /**
+   * Persist the database to a file.
+   * @param {string} filePath
+   * @returns {Promise<void>}
+   */
   public async persist(filePath: string): Promise<void> {
     const fileData = this.collections.reduce(
       (acc: DBJson, collection: Collection) => {
@@ -124,6 +201,11 @@ export class Database {
     await Deno.writeTextFile(filePath, jsonData)
   }
 
+  /**
+   * Restore a database from a file.
+   * @param {string} filePath
+   * @returns {Promise<void>}
+   */
   public async restore(filePath: string): Promise<void> {
     const fileData = await Deno.readTextFile(filePath)
     const jsonData = JSON.parse(fileData)

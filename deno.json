@@ -1,6 +1,6 @@
 {
   "name": "@bysk/jsonfile-db",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "license": "MIT",
   "nodeModulesDir": "none",
   "tasks": {
@@ -11,7 +11,8 @@
   "lint": {
     "rules": {
       "exclude": ["no-slow-types"]
-    }
+    },
+    "exclude": ["docs/"]
   },
   "fmt": {
     "singleQuote": true,

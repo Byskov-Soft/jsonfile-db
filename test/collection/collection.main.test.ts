@@ -60,7 +60,7 @@ Deno.test('Collection - importDocument adds a document to the collection', () =>
 
   // Import a document to the collection
   const docData = { _id: 1, name: 'Alice', amount: 123 }
-  collection.importDocument(docData)
+  collection.importObject(docData)
 
   // Verify the document is added
   const importedDocument = collection.getById(1)

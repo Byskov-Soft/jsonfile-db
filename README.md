@@ -2,7 +2,7 @@
 
 JSON file database for Deno implemented in Typescript.
 
-The code is based on [locallydb](https://github.com/btwael/locallydb). See original license: [LICENSE-locally-db](https://github.com/Byskov-Soft/jsonfile-db/blob/main/doc/LICENSE-locally-db).
+The code is based on [locallydb](https://github.com/btwael/locallydb). See original license: [LICENSE-locally-db](https://github.com/Byskov-Soft/jsonfile-db/blob/main/misc/LICENSE-locally-db).
 
 The purpose of the library is to provide a simple drop-in document (no-sql) database that can be used for low volume storage.
 
@@ -43,9 +43,11 @@ If you need advanced features such as user management, authentication, transacti
 
 Don't rely on this database solution for data you cannot afford to loose. Since persistence is based on writing and reading from files and no special error mitigation is implemented, app crashes and operating system issues could potentially result in a loss of data.
 
-# Usage
-(See full API in the following section)
+# API
 
+See the generated (JSDoc)[./docs/index.html]
+
+# Usage
 
 ## Create, restore and persist a database
 
