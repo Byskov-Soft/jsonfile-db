@@ -1,12 +1,11 @@
 {
   "name": "@bysk/jsonfile-db",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "license": "MIT",
   "nodeModulesDir": "none",
   "tasks": {
     "test": "deno test --allow-read --allow-write test/",
-    "publish": "npx jsr publish --allow-slow-types",
-    "publish:same": "npx jsr publish --allow-slow-types --no-version-bump"
+    "publish": "npx jsr publish --allow-slow-types"
   },
   "lint": {
     "rules": {
