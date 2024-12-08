@@ -1,26 +1,22 @@
 import { assert, assertEquals } from '@std/assert'
 import { Collection } from '../../src/collection.ts'
-import { Database } from '../../src/database.ts'
 import { Document } from '../../src/document.ts'
 
 // CONSTRUCTOR;
 Deno.test('Collection - getName returns collection name', () => {
-  const db = new Database()
-  const collection = new Collection('test', db)
+  const collection = new Collection('test')
   assertEquals(collection.getName(), 'test')
 })
 
 Deno.test('Collection - setName updates collection name', () => {
-  const db = new Database()
-  const collection = new Collection('test', db)
+  const collection = new Collection('test')
   collection.setName('newName')
   assertEquals(collection.getName(), 'newName')
 })
 
 // CREATE DOCUMENT
 Deno.test('Collection - createDocument with empty object', () => {
-  const db = new Database()
-  const collection = new Collection('test', db)
+  const collection = new Collection('test')
   const doc = collection.createDocument()
 
   assert(doc.hasProperty('_id'))
@@ -30,8 +26,7 @@ Deno.test('Collection - createDocument with empty object', () => {
 })
 
 Deno.test('Collection - createDocument with custom object', () => {
-  const db = new Database()
-  const collection = new Collection('test', db)
+  const collection = new Collection('test')
   const doc = collection.createDocument({ name: 'test', value: 123 })
 
   assert(doc.hasProperty('_id'))
@@ -43,8 +38,7 @@ Deno.test('Collection - createDocument with custom object', () => {
 })
 
 Deno.test('Collection - createDocument increments _autoId', () => {
-  const db = new Database()
-  const collection = new Collection('test', db)
+  const collection = new Collection('test')
 
   const doc1 = collection.createDocument()
   const doc2 = collection.createDocument()
@@ -55,8 +49,7 @@ Deno.test('Collection - createDocument increments _autoId', () => {
 
 // IMPORT DOCUMENT
 Deno.test('Collection - importDocument adds a document to the collection', () => {
-  const db = new Database()
-  const collection = new Collection('testCollection', db)
+  const collection = new Collection('testCollection')
 
   // Import a document to the collection
   const docData = { _id: 1, name: 'Alice', amount: 123 }
@@ -70,8 +63,7 @@ Deno.test('Collection - importDocument adds a document to the collection', () =>
 
 // ADD DOCUMENT
 Deno.test('Collection - addDocument adds a document to the collection', () => {
-  const db = new Database()
-  const collection = new Collection('testCollection', db)
+  const collection = new Collection('testCollection')
 
   // Create a document and add it to the collection
   const docData = { _id: 2, name: 'Bob', amount: 456 }

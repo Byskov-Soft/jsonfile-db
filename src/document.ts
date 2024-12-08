@@ -20,6 +20,7 @@ export type DocumentData = DocumentDataAny & {
 /**
  * A Document is a wrapper around a data object that provides
  * a set of methods to interact with the object.
+ *
  * @class Document
  */
 export class Document {
@@ -31,7 +32,8 @@ export class Document {
    * If the object does not have `_id`, `_created`, or `_updated` properties,
    * they will be added to the object as a new UUID, and the current date
    * as an ISO8601 string.
-   * @param {DocumentDataAny | DocumentData} obj
+   *
+   * @param {DocumentDataAny | DocumentData} obj The object to wrap
    */
   constructor(obj: DocumentDataAny | DocumentData) {
     this.data = {
@@ -44,8 +46,9 @@ export class Document {
 
   /**
    * Checks if the document object has a property with the given key.
-   * @param {string} key
-   * @returns {boolean}
+   *
+   * @param {string} key The key of the property
+   * @returns {boolean} true if the property exists, false otherwise
    */
   public hasProperty(key: string): boolean {
     return this.data[key] !== undefined
@@ -53,6 +56,7 @@ export class Document {
 
   /**
    * Gets a property value of the document object with the given key.
+   *
    * @param {string} key The key of the property
    * @returns {T} The type of the property value
    * @throws {Error} 202 - Property with key '{key}' not found.
@@ -67,6 +71,7 @@ export class Document {
 
   /**
    * Returns the document object.
+   *
    * @returns {DocumentData} The document object
    */
   public object(): DocumentData {
@@ -75,8 +80,9 @@ export class Document {
 
   /**
    * Set the value of a property with the given key.
-   * @param {string} key
-   * @param {T} value
+   *
+   * @param {string} key The key of the property
+   * @param {T} value The value of the property
    */
   public setProperty<T>(key: string, value: T): void {
     if (reservedkeys.indexOf(key) >= 0) {

@@ -2,7 +2,8 @@ import { v4 as uuidv4 } from 'uuid'
 
 /**
  * Get the current datetime
- * @returns {Date}
+ *
+ * @returns {Date} The current datetime
  */
 export const now = (): Date => {
   return new Date()
@@ -10,7 +11,8 @@ export const now = (): Date => {
 
 /**
  * Generate a random UUID
- * @returns {string}
+ *
+ * @returns {string} The generated UUID
  */
 export const generateUUID = () => {
   return uuidv4()
@@ -18,8 +20,9 @@ export const generateUUID = () => {
 
 /**
  * Check if a string is numeric
- * @param {string} value
- * @returns {boolean}
+ *
+ * @param {string} value The string to check
+ * @returns {boolean} true if the string is numeric, false otherwise
  */
 export const isNumeric = (value: string): boolean => {
   if (typeof value !== 'string' || value.trim() === '') {

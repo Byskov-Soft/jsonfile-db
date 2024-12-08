@@ -136,7 +136,7 @@ Deno.test('Database - loadFromFile reads collections and documents from a JSON f
 
 Deno.test('Database - persist overwrites existing file', async () => {
   const db = new Database()
-  const collection = new Collection('testCollection', db)
+  const collection = new Collection('testCollection')
 
   // Add documents to the collection
   collection.createDocument({ name: 'Alice', amount: 123 })

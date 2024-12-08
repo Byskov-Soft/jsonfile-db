@@ -5,14 +5,11 @@ import { Collection, Database } from '../../src/index.ts'
 // CONSTRUCTOR
 Deno.test('Database - constructor initializes properties', () => {
   const db = new Database()
-  const meta = db.getDBMeta()
   // Accessing private collections via type assertion for testing
-  const collections = (db as any).collections
+  const collections = (db as any)._collections
 
   assertEquals(Array.isArray(collections), true)
   assertEquals(collections.length, 0)
-  assertEquals(typeof meta.created === 'string', true)
-  assertEquals(typeof meta.updated === 'string', true)
 })
 
 // CREATE COLLECTION
@@ -22,7 +19,7 @@ Deno.test('Database - createCollection creates a new collection', () => {
 
   assertEquals(collection.getName(), 'testCollection')
   // Accessing private collections array for testing
-  const collections = (db as any).collections
+  const collections = (db as any)._collections
   assertEquals(collections.length, 1)
   assertEquals(collections[0], collection)
 })
@@ -36,17 +33,6 @@ Deno.test('Database - createCollection throws error if collection exists', () =>
     Error,
     'Error 101',
   )
-})
-
-Deno.test('Database - createCollection updates database metadata', async () => {
-  const db = new Database()
-  const prevUpdated = db.getDBMeta().updated
-
-  await new Promise((resolve) => setTimeout(resolve, 100))
-
-  db.createCollection('testCollection')
-  const newUpdated = db.getDBMeta().updated
-  assertEquals(newUpdated > prevUpdated, true)
 })
 
 // COLLECTION
@@ -67,7 +53,7 @@ Deno.test("Database - collection method creates new collection if it doesn't exi
   const db = new Database()
 
   // Ensure the collection does not exist yet
-  const collectionsBefore = (db as any).collections.length
+  const collectionsBefore = (db as any)._collections.length
   assertEquals(collectionsBefore, 0)
 
   // Retrieve (or create) the collection using the collection method
@@ -77,7 +63,7 @@ Deno.test("Database - collection method creates new collection if it doesn't exi
   assertEquals(newCollection.getName(), 'newCollection')
 
   // Verify that the collection has been added to the database
-  const collectionsAfter = (db as any).collections.length
+  const collectionsAfter = (db as any)._collections.length
   assertEquals(collectionsAfter, 1)
 })
 
@@ -94,7 +80,7 @@ Deno.test('Database - collection method does not create duplicate collections', 
   assertEquals(collection1, collection2)
 
   // Verify that only one collection exists in the database
-  const collections = (db as any).collections
+  const collections = (db as any)._collections
   assertEquals(collections.length, 1)
 })
 
@@ -167,31 +153,10 @@ Deno.test('Database - removeCollection updates collection list', () => {
   assertEquals(collections.includes('collection3'), true)
 })
 
-Deno.test('Database - removeCollection updates metadata', async () => {
-  const db = new Database()
-
-  // Create a collection
-  db.createCollection('testCollection')
-
-  // Store previous update time
-  const prevUpdated = db.getDBMeta().updated
-
-  await new Promise((resolve) => setTimeout(resolve, 100))
-
-  // Remove the collection
-  db.removeCollection('testCollection')
-
-  // Access updated time
-  const newUpdated = db.getDBMeta().updated
-
-  // Verify that the updated time has changed
-  assertEquals(newUpdated > prevUpdated, true)
-})
-
 // ADD OR REPLACE COLLECTION
 Deno.test('Database - addOrReplaceCollection adds a new collection', () => {
   const db = new Database()
-  const collection = new Collection('testCollection', db)
+  const collection = new Collection('testCollection')
 
   // Add the collection to the database
   db.addOrReplaceCollection('testCollection', collection)
@@ -204,8 +169,8 @@ Deno.test('Database - addOrReplaceCollection adds a new collection', () => {
 
 Deno.test('Database - addOrReplaceCollection replaces an existing collection', () => {
   const db = new Database()
-  const collection1 = new Collection('testCollection', db)
-  const collection2 = new Collection('testCollection', db)
+  const collection1 = new Collection('testCollection')
+  const collection2 = new Collection('testCollection')
 
   // Add the first collection to the database
   db.addOrReplaceCollection('testCollection', collection1)

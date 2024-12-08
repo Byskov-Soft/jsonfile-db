@@ -1,11 +1,9 @@
 import { assert, assertEquals, assertThrows } from '@std/assert'
 import { Collection } from '../../src/collection.ts'
-import { Database } from '../../src/database.ts'
 
 // GET BY ID
 Deno.test('Collection - getById returns document when found', () => {
-  const db = new Database()
-  const collection = new Collection('test', db)
+  const collection = new Collection('test')
   collection.createDocument({ name: 'test' })
   const foundDoc = collection.getById(0)
 
@@ -15,8 +13,7 @@ Deno.test('Collection - getById returns document when found', () => {
 })
 
 Deno.test('Collection - getById throws error when not found', () => {
-  const db = new Database()
-  const collection = new Collection('test', db)
+  const collection = new Collection('test')
   collection.createDocument({ name: 'test' })
 
   assertThrows(
@@ -27,8 +24,7 @@ Deno.test('Collection - getById throws error when not found', () => {
 })
 
 Deno.test('Collection - getById finds correct document among many', () => {
-  const db = new Database()
-  const collection = new Collection('test', db)
+  const collection = new Collection('test')
 
   collection.createDocument({ name: 'first' })
   collection.createDocument({ name: 'second' })
@@ -43,8 +39,7 @@ Deno.test('Collection - getById finds correct document among many', () => {
 
 // GET BY ATTRIBUTE
 Deno.test('Collection - getByAttribute with single attribute', () => {
-  const db = new Database()
-  const collection = new Collection('test', db)
+  const collection = new Collection('test')
 
   collection.createDocument({ name: 'test1', type: 'a' })
   collection.createDocument({ name: 'test2', type: 'b' })
@@ -60,8 +55,7 @@ Deno.test('Collection - getByAttribute with single attribute', () => {
 })
 
 Deno.test('Collection - getByAttribute with multiple attributes', () => {
-  const db = new Database()
-  const collection = new Collection('test', db)
+  const collection = new Collection('test')
 
   collection.createDocument({ name: 'test1', type: 'a', status: 'active' })
   collection.createDocument({ name: 'test2', type: 'a', status: 'inactive' })
@@ -78,8 +72,7 @@ Deno.test('Collection - getByAttribute with multiple attributes', () => {
 })
 
 Deno.test('Collection - getByAttribute returns empty array when no matches', () => {
-  const db = new Database()
-  const collection = new Collection('test', db)
+  const collection = new Collection('test')
 
   collection.createDocument({ name: 'test1', type: 'a' })
   collection.createDocument({ name: 'test2', type: 'b' })

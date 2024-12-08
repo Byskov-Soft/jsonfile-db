@@ -84,7 +84,11 @@ db.persist(pathToDb)
 import { Database, Collection, Document } from '@bysk/jsonfile-db'
 
 const db = new Database()
+
 const contacts = db.collection('contacts')
+/* Note that collections can also be created independantly of a database
+   and inserted later. See the next section (Modifying data) for details.
+*/
 
 /*
   Option 1 - Create a document and add it to the collection
@@ -119,10 +123,9 @@ contacts.importDocument({ name: 'Socrates', occupation: 'philosopher', phone: '9
 ## Modifying data
 
 ```ts
-import { Database, Collection } from '@bysk/jsonfile-db'
+import { Collection } from '@bysk/jsonfile-db'
 
-const db = new Database()
-const contacts = new Collection('contacts', db)
+const contacts = new Collection('contacts')
 
 const contact1 = contacts.createDocument({
   _id: 123, name: 'Dr. Seuss', occupation: 'author', phone: '000000000'
